@@ -2,10 +2,21 @@
   "name": "kws2100-reference-app",
   "version": "1.0.0",
   "devDependencies": {
-    "prettier": "^3.0.3"
+    "extract-zip": "^2.0.1",
+    "mkdirp": "^3.0.1",
+    "prettier": "^3.0.3",
+    "wget-improved": "^3.4.0"
   },
   "scripts": {
     "prettier": "prettier --write .",
+    "dev": "npm run docker:compose && npm run dev:nyc_data && npm run dev:server",
+    "dev:server": "cd server && npm run dev",
+    "dev:nyc_data": "npm run nyc_data:check || npm run nyc_data:load",
+    "nyc_data:check": "docker exec postgres /usr/bin/psql --user postgres -c \"select count(*) from nyc_subway_stations\"",
+    "nyc_data:load": "npm run nyc_data:download && npm run nyc_data:unzip && npm run nyc_data:restore",
+    "nyc_data:download": "mkdirp node_modules/workshop && nwget https://s3.amazonaws.com/s3.cleverelephant.ca/postgis-workshop-2020.zip -O node_modules/workshop/postgis-workshop-2020.zip",
+    "nyc_data:unzip": "cd node_modules/workshop/ && extract-zip postgis-workshop-2020.zip",
+    "nyc_data:restore": "cd node_modules/workshop/postgis-workshop/data/ && docker exec -i postgres usr/bin/pg_restore --dbname postgres --user postgres < nyc_data.backup",
     "docker:compose": "docker compose start",
     "postinstall": "docker compose create"
   }
