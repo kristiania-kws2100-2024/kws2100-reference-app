@@ -3,5 +3,10 @@
   "version": "1.0.0",
   "devDependencies": {
     "prettier": "^3.0.3"
+  },
+  "scripts": {
+    "prettier": "prettier --write .",
+    "docker:compose": "docker compose start",
+    "postinstall": "docker compose create"
   }
 }
