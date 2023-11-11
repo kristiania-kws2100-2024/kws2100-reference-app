@@ -2,6 +2,7 @@
   "name": "kws2100-reference-app",
   "version": "1.0.0",
   "devDependencies": {
+    "concurrently": "^8.2.2",
     "extract-zip": "^2.0.1",
     "mkdirp": "^3.0.1",
     "prettier": "^3.0.3",
@@ -9,7 +10,8 @@
   },
   "scripts": {
     "prettier": "prettier --write .",
-    "dev": "npm run docker:compose && npm run dev:nyc_data && npm run dev:server",
+    "dev": "npm run docker:compose && npm run dev:nyc_data && concurrently npm:dev:server npm:dev:client",
+    "dev:client": "cd client && npm run dev",
     "dev:server": "cd server && npm run dev",
     "dev:nyc_data": "npm run nyc_data:check || npm run nyc_data:load",
     "nyc_data:check": "docker exec postgres /usr/bin/psql --user postgres -c \"select count(*) from nyc_subway_stations\"",
