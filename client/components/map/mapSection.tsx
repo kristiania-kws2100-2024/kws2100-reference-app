@@ -9,6 +9,7 @@ import "ol/ol.css";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { GeoJSON } from "ol/format";
+import { Stroke, Style } from "ol/style";
 
 useGeographic();
 
@@ -24,6 +25,12 @@ export function MapSection() {
           source: new VectorSource({
             url: "/geojson/kommuner.geojson",
             format: new GeoJSON(),
+          }),
+          style: new Style({
+            stroke: new Stroke({
+              color: "blue",
+              width: 0.2,
+            }),
           }),
         }),
       ],
