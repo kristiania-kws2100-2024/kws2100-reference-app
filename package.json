@@ -17,6 +17,7 @@
     "nyc_data:download": "mkdirp node_modules/workshop && nwget https://s3.amazonaws.com/s3.cleverelephant.ca/postgis-workshop-2020.zip -O node_modules/workshop/postgis-workshop-2020.zip",
     "nyc_data:unzip": "cd node_modules/workshop/ && extract-zip postgis-workshop-2020.zip",
     "nyc_data:restore": "cd node_modules/workshop/postgis-workshop/data/ && docker exec -i postgres usr/bin/pg_restore --dbname postgres --user postgres < nyc_data.backup",
+    "norway_data": "cd data && npm run process",
     "docker:compose": "docker compose start",
     "postinstall": "docker compose create"
   }
