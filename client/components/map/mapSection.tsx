@@ -3,18 +3,21 @@ import { MutableRefObject, useEffect, useRef } from "react";
 import { Map, View } from "ol";
 import TileLayer from "ol/layer/Tile";
 import { OSM } from "ol/source";
+import { useGeographic } from "ol/proj";
+
+useGeographic();
 
 export function MapSection() {
   const mapRef = useRef() as MutableRefObject<HTMLDivElement>;
   useEffect(() => {
-    const map = new Map({
+    new Map({
       layers: [
         new TileLayer({
           source: new OSM(),
         }),
       ],
       target: mapRef.current,
-      view: new View({ center: [0, 0], zoom: 4 }),
+      view: new View({ center: [11, 60], zoom: 10 }),
     });
   }, []);
   return <main ref={mapRef}></main>;

@@ -35,11 +35,13 @@ footer {
 
 #content :has(input:not(:checked)) {
   grid-template-columns: 0fr;
+  visibility: hidden;
 }
 
 .content input:not(:checked) {
   position: fixed;
   background-color: lightgrey;
+  visibility: visible !important;
 }
 
 .right-sidebar input {
