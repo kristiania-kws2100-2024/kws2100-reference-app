@@ -6,6 +6,9 @@ import { OSM } from "ol/source";
 import { useGeographic } from "ol/proj";
 
 import "ol/ol.css";
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from "ol/source/Vector";
+import { GeoJSON } from "ol/format";
 
 useGeographic();
 
@@ -16,6 +19,12 @@ export function MapSection() {
       layers: [
         new TileLayer({
           source: new OSM(),
+        }),
+        new VectorLayer({
+          source: new VectorSource({
+            url: "/geojson/kommuner.geojson",
+            format: new GeoJSON(),
+          }),
         }),
       ],
       target: mapRef.current,
