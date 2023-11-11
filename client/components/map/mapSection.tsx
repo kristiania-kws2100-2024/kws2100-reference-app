@@ -5,6 +5,8 @@ import TileLayer from "ol/layer/Tile";
 import { OSM } from "ol/source";
 import { useGeographic } from "ol/proj";
 
+import "ol/ol.css";
+
 useGeographic();
 
 export function MapSection() {
