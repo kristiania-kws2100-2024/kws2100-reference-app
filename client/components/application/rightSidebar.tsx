@@ -1,6 +1,11 @@
 import * as React from "react";
+import { KommunePropertiesDto } from "../../../lib/norway";
 
-export function RightSidebar() {
+export function RightSidebar({
+  kommuneList,
+}: {
+  kommuneList: KommunePropertiesDto[];
+}) {
   return (
     <aside className="right-sidebar">
       <div className={"content"}>
@@ -10,51 +15,11 @@ export function RightSidebar() {
         </label>
         <h2>Right sidebar</h2>
         <ul>
-          <li>Lorem ipsum.</li>
-          <li>Nostrum, possimus!</li>
-          <li>Dolorem, laudantium.</li>
-          <li>Delectus, soluta?</li>
-          <li>Itaque, repellat!</li>
-          <li>Adipisci, doloribus.</li>
-          <li>Inventore, magni.</li>
-          <li>Blanditiis, minus!</li>
-          <li>Distinctio, quidem?</li>
-          <li>Natus, sequi?</li>
-          <li>Laboriosam, voluptatum?</li>
-          <li>Aliquam, blanditiis.</li>
-          <li>Est, necessitatibus!</li>
-          <li>Ex, odio.</li>
-          <li>Provident, veritatis.</li>
-          <li>Lorem ipsum.</li>
-          <li>Nostrum, possimus!</li>
-          <li>Dolorem, laudantium.</li>
-          <li>Delectus, soluta?</li>
-          <li>Itaque, repellat!</li>
-          <li>Adipisci, doloribus.</li>
-          <li>Inventore, magni.</li>
-          <li>Blanditiis, minus!</li>
-          <li>Distinctio, quidem?</li>
-          <li>Natus, sequi?</li>
-          <li>Laboriosam, voluptatum?</li>
-          <li>Aliquam, blanditiis.</li>
-          <li>Est, necessitatibus!</li>
-          <li>Ex, odio.</li>
-          <li>Provident, veritatis.</li>
-          <li>Lorem ipsum.</li>
-          <li>Nostrum, possimus!</li>
-          <li>Dolorem, laudantium.</li>
-          <li>Delectus, soluta?</li>
-          <li>Itaque, repellat!</li>
-          <li>Adipisci, doloribus.</li>
-          <li>Inventore, magni.</li>
-          <li>Blanditiis, minus!</li>
-          <li>Distinctio, quidem?</li>
-          <li>Natus, sequi?</li>
-          <li>Laboriosam, voluptatum?</li>
-          <li>Aliquam, blanditiis.</li>
-          <li>Est, necessitatibus!</li>
-          <li>Ex, odio.</li>
-          <li>Provident, veritatis.</li>
+          {kommuneList.map((k) => (
+            <div key={k.kommunenummer}>
+              {k.navn.find((n) => n.sprak === "nor")?.navn}
+            </div>
+          ))}
         </ul>
       </div>
     </aside>

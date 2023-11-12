@@ -1,6 +1,6 @@
 import { FeatureCollection, PolygonDto } from "../client/lib/geoJson";
 
-interface KommunePropertiesDto {
+export interface KommunePropertiesDto {
   kommunenummer: string;
   navn: {
     sprak:
