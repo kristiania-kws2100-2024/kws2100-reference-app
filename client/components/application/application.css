@@ -64,3 +64,8 @@ footer {
 footer {
   justify-content: space-between;
 }
+
+.kommune-list div:hover,
+.kommune-list div.focus {
+  font-weight: bold;
+}

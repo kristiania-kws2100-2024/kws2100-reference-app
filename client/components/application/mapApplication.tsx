@@ -3,8 +3,12 @@ import { Link } from "react-router-dom";
 
 import "./application.css";
 import { AppMainSection } from "./appMainSection";
+import { useState } from "react";
+import { KommunePropertiesDto } from "../../../lib/norway";
 
 export function MapApplication() {
+  const [focusKommune, setFocusKommune] = useState<KommunePropertiesDto>();
+
   return (
     <>
       <header>
@@ -23,9 +27,16 @@ export function MapApplication() {
         <Link to={"/"}>Menu Item 3</Link>
         <Link to={"/"}>Menu Item 3</Link>
       </nav>
-      <AppMainSection />
+      <AppMainSection
+        focusKommune={focusKommune}
+        setFocusKommune={setFocusKommune}
+      />
       <footer>
-        <div>Focus:</div>
+        <div>
+          Kommune:
+          {focusKommune &&
+            focusKommune.navn.find((n) => n.sprak === "nor")?.navn}
+        </div>
         <div className={"divider"}></div>
         <div>Status</div>
       </footer>
