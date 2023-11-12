@@ -8,12 +8,14 @@ import { useGeographic } from "ol/proj";
 import "ol/ol.css";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
-import { GeoJSON } from "ol/format";
-import { Stroke, Style } from "ol/style";
 
 useGeographic();
 
-export function MapSection() {
+export function MapSection({
+  kommuneLayer,
+}: {
+  kommuneLayer: VectorLayer<VectorSource>;
+}) {
   const mapRef = useRef() as MutableRefObject<HTMLDivElement>;
   useEffect(() => {
     new Map({
@@ -21,18 +23,7 @@ export function MapSection() {
         new TileLayer({
           source: new OSM(),
         }),
-        new VectorLayer({
-          source: new VectorSource({
-            url: "/geojson/kommuner.geojson",
-            format: new GeoJSON(),
-          }),
-          style: new Style({
-            stroke: new Stroke({
-              color: "blue",
-              width: 0.2,
-            }),
-          }),
-        }),
+        kommuneLayer,
       ],
       target: mapRef.current,
       view: new View({ center: [11, 60], zoom: 10 }),
