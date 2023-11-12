@@ -6,12 +6,7 @@ import { LeftSidebar } from "./leftSidebar";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { Fill, Stroke, Style, Text } from "ol/style";
-import { Feature, Map, MapBrowserEvent, View } from "ol";
-import { Geometry, Polygon } from "ol/geom";
-import {
-  KommuneFeatureCollectionDto,
-  KommunePropertiesDto,
-} from "../../../lib/norway";
+import { Map, View } from "ol";
 import { sortBy } from "../../lib/sortBy";
 import TileLayer from "ol/layer/Tile";
 import { OSM } from "ol/source";
@@ -19,6 +14,13 @@ import { useGeographic } from "ol/proj";
 
 import "ol/ol.css";
 import { FeatureLike } from "ol/Feature";
+import { useFeatureSelector } from "../map/useFeatureSelector";
+import { useHoveredFeature } from "../map/useHoveredFeature";
+import {
+  kommuneAsFeature,
+  KommuneFeatureCollectionDto,
+  KommunePropertiesDto,
+} from "../../lib/norway";
 
 useGeographic();
 
@@ -57,24 +59,15 @@ export function AppMainSection({
   focusKommune?: KommunePropertiesDto;
   setFocusKommune: Dispatch<SetStateAction<KommunePropertiesDto | undefined>>;
 }) {
+  const map = useMemo(() => {
+    return new Map({
+      view: new View({ center: [11, 60], zoom: 10, constrainResolution: true }),
+    });
+  }, []);
+
   const [kommuneList, setKommuneList] = useState<KommunePropertiesDto[]>([]);
   const [selectedKommune, setSelectedKommune] =
     useState<KommunePropertiesDto>();
-  const [_, setSelectedKommuneFeature] = useState<Feature<Geometry>>();
-
-  useEffect(() => {
-    const id = selectedKommune?.kommunenummer;
-    const feature = id ? kommuneSource.getFeatureById(id) : undefined;
-    if (feature) {
-      feature.setProperties({ ...feature.getProperties(), selected: true });
-    }
-    setSelectedKommuneFeature((old) => {
-      if (old && old.getId() !== feature?.getId()) {
-        old.setProperties({ ...old.getProperties(), selected: false });
-      }
-      return feature || undefined;
-    });
-  }, [selectedKommune]);
 
   const backgroundLayer = useMemo(
     () => new TileLayer({ source: new OSM() }),
@@ -86,13 +79,15 @@ export function AppMainSection({
     () => new VectorLayer({ source: kommuneSource, style: kommuneStyleFn }),
     [kommuneSource],
   );
+  useFeatureSelector(kommuneSource, selectedKommune?.kommunenummer);
+  const hoverKommuneFeature = useHoveredFeature(map, kommuneSource);
+  useEffect(() => {
+    setFocusKommune(
+      hoverKommuneFeature?.getProperties() as KommunePropertiesDto,
+    );
+  }, [hoverKommuneFeature]);
 
   const layers = useMemo(() => [backgroundLayer, kommuneLayer], [kommuneLayer]);
-  const map = useMemo(() => {
-    return new Map({
-      view: new View({ center: [11, 60], zoom: 10, constrainResolution: true }),
-    });
-  }, []);
   useEffect(() => map.setLayers(layers), [layers]);
 
   async function loadKommuneList() {
@@ -105,29 +100,9 @@ export function AppMainSection({
         .sort(sortBy((p) => p.navn.find((n) => n.sprak === "nor")?.navn!)),
     );
     for (const featureDto of kommuneFeatures.features) {
-      const feature = new Feature({
-        ...featureDto.properties,
-        geometry: new Polygon(featureDto.geometry.coordinates),
-      });
-      feature.setId(featureDto.properties.kommunenummer);
-      kommuneSource.addFeature(feature);
+      kommuneSource.addFeature(kommuneAsFeature(featureDto));
     }
   }
-
-  useEffect(() => {
-    function handlePointerMove(e: MapBrowserEvent<MouseEvent>) {
-      const hoverKommune = kommuneSource
-        .getFeaturesAtCoordinate(e.coordinate)[0]
-        ?.getProperties() as KommunePropertiesDto;
-
-      setFocusKommune((old) =>
-        old?.kommunenummer === hoverKommune?.kommunenummer ? old : hoverKommune,
-      );
-    }
-
-    map.on("pointermove", handlePointerMove);
-    return () => map.un("pointermove", handlePointerMove);
-  }, [map]);
 
   useEffect(() => {
     loadKommuneList().then();

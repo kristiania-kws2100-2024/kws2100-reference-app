@@ -3,7 +3,7 @@ export interface FeatureCollection<GEO extends GeometryDto, PROPS> {
   features: FeatureDto<GEO, PROPS>[];
 }
 
-interface FeatureDto<GEO extends GeometryDto, PROPS> {
+export interface FeatureDto<GEO extends GeometryDto, PROPS> {
   type: "Feature";
   geometry: GEO;
   properties: PROPS;
