@@ -8,59 +8,17 @@ import VectorSource from "ol/source/Vector";
 import { Stroke, Style } from "ol/style";
 import { Feature } from "ol";
 import { Polygon } from "ol/geom";
+import { KommuneFeatureCollectionDto } from "../../../lib/norway";
 
-interface FeatureCollection<GEO extends GeometryDto, PROPS> {
-  type: "FeatureCollection";
-  features: FeatureDto<GEO, PROPS>[];
-}
-
-interface FeatureDto<GEO extends GeometryDto, PROPS> {
-  type: "Feature";
-  geometry: GEO;
-  properties: PROPS;
-}
-
-interface PolygonDto {
-  type: "Polygon";
-  coordinates: number[][][];
-}
-interface PointDto {
-  type: "Point";
-  coordinates: number[][];
-}
-
-type GeometryDto = PolygonDto | PointDto;
-
-interface KommunePropertiesDto {
-  kommunenummer: string;
-  navn: {
-    sprak:
-      | "nor" // norwegian
-      | "sma" // south sami
-      | "sme" // north sami
-      | "fkv" // kven
-      | "smj"; // lule sami
-    navn: string;
-  }[];
-}
-
-interface KommuneFeatureCollectionDto
-  extends FeatureCollection<PolygonDto, KommunePropertiesDto> {}
+const kommuneStyle = new Style({
+  stroke: new Stroke({ color: "blue", width: 0.2 }),
+});
 
 export function AppMainSection() {
   const kommuneSource = useMemo(() => new VectorSource(), []);
   const kommuneLayer = useMemo(
-    () =>
-      new VectorLayer({
-        source: kommuneSource,
-        style: new Style({
-          stroke: new Stroke({
-            color: "blue",
-            width: 0.2,
-          }),
-        }),
-      }),
-    [],
+    () => new VectorLayer({ source: kommuneSource, style: kommuneStyle }),
+    [kommuneSource],
   );
 
   async function loadKommuneList() {
