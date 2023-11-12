@@ -5,7 +5,7 @@ import { RightSidebar } from "./rightSidebar";
 import { LeftSidebar } from "./leftSidebar";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
-import { Stroke, Style } from "ol/style";
+import { Fill, Stroke, Style, Text } from "ol/style";
 import { Feature, Map, MapBrowserEvent, View } from "ol";
 import { Geometry, Polygon } from "ol/geom";
 import {
@@ -25,13 +25,29 @@ useGeographic();
 const kommuneStyle = new Style({
   stroke: new Stroke({ color: "blue", width: 0.2 }),
 });
-const kommuneStyleHighlight = new Style({
+const kommuneStyleHighlight = {
   stroke: new Stroke({ color: "blue", width: 2 }),
-});
+  fill: new Fill({ color: [0xff, 0xff, 0xff, 0.1] }),
+};
+const kommuneStyleTextHighlight = {
+  font: "18px Calibri,sans-serif,bold",
+  fill: new Fill({ color: "black" }),
+  stroke: new Stroke({ color: "white", width: 1 }),
+};
 
 function kommuneStyleFn(feature: FeatureLike): Style {
-  const properties = feature.getProperties();
-  return properties.selected ? kommuneStyleHighlight : kommuneStyle;
+  const properties = feature.getProperties() as KommunePropertiesDto & {
+    selected?: boolean;
+  };
+  return !properties.selected
+    ? kommuneStyle
+    : new Style({
+        ...kommuneStyleHighlight,
+        text: new Text({
+          ...kommuneStyleTextHighlight,
+          text: properties.navn.find((n) => n.sprak === "nor")?.navn,
+        }),
+      });
 }
 
 export function AppMainSection({
@@ -74,7 +90,7 @@ export function AppMainSection({
   const layers = useMemo(() => [backgroundLayer, kommuneLayer], [kommuneLayer]);
   const map = useMemo(() => {
     return new Map({
-      view: new View({ center: [11, 60], zoom: 10 }),
+      view: new View({ center: [11, 60], zoom: 10, constrainResolution: true }),
     });
   }, []);
   useEffect(() => map.setLayers(layers), [layers]);
