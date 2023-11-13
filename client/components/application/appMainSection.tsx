@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { MapSection } from "../map/mapSection";
 import { RightSidebar } from "./rightSidebar";
 import { LeftSidebar } from "./leftSidebar";
-import { Map, View } from "ol";
+import { Map } from "ol";
 import TileLayer from "ol/layer/Tile";
 import { OSM } from "ol/source";
 import { useGeographic } from "ol/proj";
@@ -15,18 +15,14 @@ import { useKommuneLayer } from "./useKommuneLayer";
 useGeographic();
 
 export function AppMainSection({
+  map,
   focusKommune,
   setFocusKommune,
 }: {
+  map: Map;
   focusKommune?: KommunePropertiesDto;
   setFocusKommune: Dispatch<SetStateAction<KommunePropertiesDto | undefined>>;
 }) {
-  const map = useMemo(() => {
-    return new Map({
-      view: new View({ center: [11, 60], zoom: 10, constrainResolution: true }),
-    });
-  }, []);
-
   const [selectedKommune, setSelectedKommune] =
     useState<KommunePropertiesDto>();
 
