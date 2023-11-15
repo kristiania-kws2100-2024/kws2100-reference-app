@@ -46,7 +46,8 @@ export function useKommuneLayer(
   path: string,
   selected?: KommunePropertiesDto,
 ) {
-  const [kommuneList, setKommuneList] = useState<KommunePropertiesDto[]>([]);
+  const [kommuneFeatures, setKommuneFeatures] =
+    useState<KommuneFeatureCollectionDto>();
   const source = useMemo(() => new VectorSource(), []);
   const layer = useMemo(
     () => new VectorLayer({ source, style: kommuneStyleFn }),
@@ -56,11 +57,10 @@ export function useKommuneLayer(
   async function loadKommuneList() {
     const res = await fetch(path);
     const kommuneFeatures = (await res.json()) as KommuneFeatureCollectionDto;
-    setKommuneList(
-      kommuneFeatures.features
-        .map((f) => f.properties)
-        .sort(sortBy((p) => p.navn.find((n) => n.sprak === "nor")?.navn!)),
+    kommuneFeatures.features.sort(
+      sortBy((p) => p.properties.navn.find((n) => n.sprak === "nor")?.navn!),
     );
+    setKommuneFeatures(kommuneFeatures);
     for (const featureDto of kommuneFeatures.features) {
       source.addFeature(kommuneAsFeature(featureDto));
     }
@@ -77,5 +77,5 @@ export function useKommuneLayer(
     loadKommuneList().then();
   }, []);
 
-  return { kommuneList, layer, hoveredKommune };
+  return { kommuneFeatures, layer, hoveredKommune };
 }

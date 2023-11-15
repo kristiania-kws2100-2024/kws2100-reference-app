@@ -19,6 +19,9 @@ import { useGeographic } from "ol/proj";
 import "ol/ol.css";
 import { KommunePropertiesDto } from "../../lib/norway";
 import { useKommuneLayer } from "./useKommuneLayer";
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from "ol/source/Vector";
+import { GeoJSON } from "ol/format";
 
 useGeographic();
 
@@ -74,7 +77,7 @@ export function AppMainSection({
   }, [selectionMode]);
 
   const {
-    kommuneList,
+    kommuneFeatures,
     layer: kommuneLayer,
     hoveredKommune,
   } = useKommuneLayer(map, "/geojson/kommuner.geojson", selectedKommune);
@@ -105,8 +108,9 @@ export function AppMainSection({
       </dialog>
       <RightSidebar
         focusKommune={focusKommune}
-        kommuneList={kommuneList}
+        kommuneFeatures={kommuneFeatures}
         setSelectedKommune={setSelectedKommune}
+        view={map.getView()}
       />
     </section>
   );

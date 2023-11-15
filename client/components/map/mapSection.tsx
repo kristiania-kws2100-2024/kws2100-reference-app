@@ -11,5 +11,5 @@ export function MapSection({
 }) {
   const mapRef = useRef() as MutableRefObject<HTMLDivElement>;
   useEffect(() => map.setTarget(mapRef.current), []);
-  return <main ref={mapRef} className={className}></main>;
+  return <main ref={mapRef} tabIndex={0} className={className}></main>;
 }
