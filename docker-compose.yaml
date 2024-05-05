@@ -1,8 +1,8 @@
 version: '3'
 services:
-  postgres:
+  postgis:
     image: postgis/postgis
-    container_name: postgres
+    container_name: postgis
     ports:
       - 5432:5432
     environment:

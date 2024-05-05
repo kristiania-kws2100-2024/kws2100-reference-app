@@ -16,5 +16,18 @@ norwayDataRouter.get("/api/norway/roads", async (req, res) => {
     [`point(${longitude} ${latitude})`],
   );
 
-  res.json({ latitude, longitude, rows: result.rows });
+  res.json({
+    type: "FeatureCollection",
+    features: result.rows.map((kommune) => ({
+      kommunenummer: kommune.kommunenummer,
+    })),
+  });
+});
+
+norwayDataRouter.get("/api/norway/eiendom", (req, res) => {
+  console.log({ req: req.url });
+  res.json({
+    type: "FeatureCollection",
+    features: [],
+  });
 });

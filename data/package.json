@@ -5,7 +5,7 @@
   },
   "scripts": {
     "process": "ts-node process.ts",
-    "norway_data:dump": "docker exec -i postgres /usr/bin/pg_dump -t norway_roads --user postgres > norway.sql.dump"
+    "norway_data:dump": "docker exec -i postgis /usr/bin/pg_dump -t norway_roads --user postgres > norway.sql.dump"
   },
   "devDependencies": {
     "@types/pg": "^8.10.9",

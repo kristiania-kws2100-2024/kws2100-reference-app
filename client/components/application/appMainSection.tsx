@@ -83,7 +83,33 @@ export function AppMainSection({
   } = useKommuneLayer(map, "/geojson/kommuner.geojson", selectedKommune);
   useEffect(() => setFocusKommune(hoveredKommune), [hoveredKommune]);
 
-  const layers = useMemo(() => [backgroundLayer, kommuneLayer], [kommuneLayer]);
+  const eiendomLayer = useMemo(
+    () =>
+      new VectorLayer({
+        source: new VectorSource({
+          strategy: (extend, resolution) => {
+            if (resolution < 0.00002) {
+              return [extend];
+            } else {
+              return [];
+            }
+          },
+          format: new GeoJSON(),
+          url: (extent, resolution, projection) => {
+            console.log({ extent, resolution, projection });
+            return `/api/norway/eiendom?bbox=${JSON.stringify(
+              extent,
+            )}&resolution=${resolution}`;
+          },
+        }),
+      }),
+    [],
+  );
+
+  const layers = useMemo(
+    () => [backgroundLayer, kommuneLayer, eiendomLayer],
+    [kommuneLayer, eiendomLayer],
+  );
   useEffect(() => map.setLayers(layers), [layers]);
 
   const [searchResults, setSearchResults] = useState<unknown>();
