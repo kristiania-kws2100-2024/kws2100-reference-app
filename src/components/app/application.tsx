@@ -5,7 +5,7 @@ import { useGeographic } from "ol/proj";
 
 import "ol/ol.css";
 import { usePointerMove } from "../map/usePointerMove";
-import { useMapboxStyleLayer } from "../map/mapboxStyleLayer";
+import { useMapboxNostyleLayer } from "../map/mapboxNostyleLayer";
 
 useGeographic();
 const map = new Map({
@@ -16,7 +16,7 @@ export function Application() {
   const mapRef = useRef() as MutableRefObject<HTMLDivElement>;
   useEffect(() => map.setTarget(mapRef.current), []);
 
-  const { vectorTileLayer, setActiveFeature } = useMapboxStyleLayer();
+  const { vectorTileLayer, setActiveFeature } = useMapboxNostyleLayer();
 
   const layers = useMemo(() => [vectorTileLayer], []);
   useEffect(() => map.setLayers(layers), []);
