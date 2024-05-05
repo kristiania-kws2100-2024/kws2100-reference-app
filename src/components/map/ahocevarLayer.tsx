@@ -46,5 +46,5 @@ export function useAhocevarLayer() {
     vectorTileLayer.setStyle(styleFunction);
   }, [activeFeature]);
 
-  return { ahocevarLayer: vectorTileLayer, setActiveFeature };
+  return { vectorTileLayer, setActiveFeature };
 }

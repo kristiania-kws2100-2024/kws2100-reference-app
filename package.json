@@ -1,5 +1,6 @@
 {
   "name": "kws2100-reference-app",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "test": "tsc --noEmit && prettier --check .",
@@ -15,6 +16,7 @@
   },
   "dependencies": {
     "ol": "^9.1.0",
+    "ol-mapbox-style": "^12.3.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   }
