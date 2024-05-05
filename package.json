@@ -1,11 +1,16 @@
 {
   "name": "kws2100-reference-app",
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "test": "tsc --noEmit && prettier --check .",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
+    "husky": "^9.0.11",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5",
     "vite": "^5.2.11"
   },
   "dependencies": {
